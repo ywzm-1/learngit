@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--使用properties文件描述对应的数据库来源-->
+    <context:property-placeholder location="classpath:properties/*.properties"/>
+    <!--配置数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="maxActive" value="10"/>
+        <property name="minIdle" value="5"/>
+    </bean>
+
+    <!--配置sqlsessionFactory,即spring工厂，可以创建sqlsession，这是个接口，并且引入SqlMapConfig.xml-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlsessionFactory">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml"></property>
+    </bean>
+
+    <!--扫描mapper接口，因为mapper接口和其实现的sql数据的xml放在同一目录下，xml文件只有放在resources中
+        可以不用扫描，系统会自动加载，但是为了方便查看，所有mapper接口和mapper.xml放在同一目录
+        这个也叫映射器，映射mapper目录
+        所以扫描的是整个目录，不仅仅是所谓的mapper接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.pinyougou.mapper"></property>
+    </bean>
+
+</beans>
