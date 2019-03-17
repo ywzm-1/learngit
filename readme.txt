@@ -6,4 +6,5 @@ apple
 dfhahi
 adfa
 Creating a new branch is quick.
-Creating second branch  
+Creating second branch 
+Creating a new branch is quick AND simple. 
